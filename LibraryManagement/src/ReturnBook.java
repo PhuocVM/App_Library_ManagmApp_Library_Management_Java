@@ -1,6 +1,5 @@
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -11,10 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -30,332 +28,267 @@ import com.toedter.calendar.JDateChooser;
 
 public class ReturnBook extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JComboBox comboBox;
-	private JTextField textField_2;
-	private JDateChooser dateChooser;
-	private SimpleDateFormat dFormate;
-	private DateTimeFormatter dtf;
-	private JTextField textField_3;
+    private JPanel contentPane;
+    private JTextField textField_MaSach;
+    private JTextField textField_TenSach;
+    private JComboBox comboBox_TacGia;
+    private JTextField textField_TenNguoiDung;
+    private JTextField textField_NgayMuon;
+    private JDateChooser dateChooser_NgayTra;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					ReturnBook frame = new ReturnBook();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    ReturnBook frame = new ReturnBook();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
-	/**
-	 * Create the frame.
-	 */
-	public void reset()
-	{
-		textField.setText(null);
-		textField_1.setText(null);
-		textField_2.setText(null);
-		comboBox.setSelectedIndex(0);
-		textField_3.setText(null);
-		dateChooser.setCalendar(null);
-		textField_1.setEditable(true);
-		comboBox.setEnabled(true);
-	}
-	public ReturnBook() {
-		setTitle("Return Book");
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 574);
-		setLocationRelativeTo(this);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+    // Hàm reset dữ liệu
+    public void reset() {
+        textField_MaSach.setText(null);
+        textField_TenSach.setText(null);
+        comboBox_TacGia.setSelectedIndex(0);
+        textField_TenNguoiDung.setText(null);
+        textField_NgayMuon.setText(null);
+        dateChooser_NgayTra.setCalendar(null);
+        textField_TenSach.setEditable(true);
+        comboBox_TacGia.setEnabled(true);
+    }
 
-		setContentPane(contentPane);
-		
-		JLabel lblNewLabel = new JLabel("");
-		Image clgLogo=new ImageIcon(this.getClass().getResource("logo.jpg")).getImage();
-		lblNewLabel.setIcon(new ImageIcon(clgLogo));
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		JLabel lblNewLabel_1 = new JLabel("Return Book");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setFont(new Font("Verdana", Font.BOLD, 16));
-		
-		JLabel lblNewLabel_2 = new JLabel("Thank you for returning the books on time");
-		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2.setFont(new Font("Verdana", Font.ITALIC, 13));
-		
-		JLabel lblNewLabel_2_1 = new JLabel("and helping us maintain our library collections.");
-		lblNewLabel_2_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_2_1.setFont(new Font("Verdana", Font.ITALIC, 13));
-		
-		JLabel lblNewLabel_3 = new JLabel("Book Id");
-		lblNewLabel_3.setFont(new Font("Verdana", Font.PLAIN, 13));
-		
-		textField = new JTextField();
-		textField.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) 
-			{
-				String id=textField.getText();
-				Connection con=DBInfo.conn();
-				String query="SELECT * FROM issueBooks WHERE bookId=?";
-				int flag=0;
-				try {
-					PreparedStatement ps=con.prepareStatement(query);
-					ps.setString(1, id);
-					ResultSet res=ps.executeQuery();
-					while(res.next())
-					{
-						flag=1;
-						String title=res.getString(3);
-						String author=res.getString(4);
-						String issueDate=res.getString(5);
-						
-						textField.setText(id);
-						textField_1.setText(title);
-						comboBox.setSelectedItem(author);
-						textField_3.setText(issueDate);
-					}
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-				if(flag==0)
-				{
-					JOptionPane.showMessageDialog(getParent(), "Book Id Number is in-correct.","Invalid Input",JOptionPane.ERROR_MESSAGE);
-				}
-				else
-				{
-					textField_1.setEditable(false);
-					comboBox.setEnabled(false);
-				}
-			}
-		});
-		textField.setFont(new Font("Verdana", Font.PLAIN, 13));
-		textField.setColumns(10);
-		
-		textField_1 = new JTextField();
-		textField_1.setFont(new Font("Verdana", Font.PLAIN, 13));
-		textField_1.setColumns(10);
-		
-		comboBox = new JComboBox(DBInfo.getValue("author"));
-		comboBox.setFont(new Font("Verdana", Font.PLAIN, 13));
-		
-		JLabel lblNewLabel_3_1 = new JLabel("Book Title");
-		lblNewLabel_3_1.setFont(new Font("Verdana", Font.PLAIN, 13));
-		
-		JLabel lblNewLabel_3_1_1 = new JLabel("Author Name");
-		lblNewLabel_3_1_1.setFont(new Font("Verdana", Font.PLAIN, 13));
-		
-	
-		JLabel lblNewLabel_3_1_1_1 = new JLabel("Issue Date");
-		lblNewLabel_3_1_1_1.setFont(new Font("Verdana", Font.PLAIN, 13));
-		
-		dateChooser = new JDateChooser();
-		dateChooser.setDateFormatString("dd-MM-yyyy");
-		dateChooser.setFont(new Font("Verdana", Font.PLAIN, 13));
-		
-		JLabel lblNewLabel_3_1_1_1_1 = new JLabel("Due Date");
-		lblNewLabel_3_1_1_1_1.setFont(new Font("Verdana", Font.PLAIN, 13));
-		
-		JButton btnIssue = new JButton("Submit");
-		btnIssue.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) 
-			{
-				SimpleDateFormat dFormate=new SimpleDateFormat("dd-MM-yyyy");
-				String username=textField_2.getText();
-				String bookId=textField.getText();
-				String title=textField_1.getText();
-				String author=comboBox.getSelectedItem().toString();
-				String issueDate=textField_3.getText();
-				String dueDate=dFormate.format(dateChooser.getDate());
-				System.out.println("Due Date "+dueDate);
-				System.out.println("Issue Date "+issueDate);
-				
-				if(username.length()==0 ||bookId.length()==0 || title.length()==0 || author.equalsIgnoreCase("Select") || issueDate.length()==0 || dueDate.length()==0)
-				{
-					JOptionPane.showMessageDialog(getParent(), "Field was left empty, a value must be provided.","Field is required",JOptionPane.ERROR_MESSAGE);
-				}else
-				{
-					Connection con=DBInfo.conn();
-					
-					try {
-						Statement stmt=con.createStatement();
-					} catch (SQLException e2) {
-						e2.printStackTrace();
-					}
-					String sql="SELECT * FROM issueBooks WHERE username=?";
-					PreparedStatement ps_username = null;
-					try {
-						ps_username = con.prepareStatement(sql);
-						ps_username.setString(1, username);
-						ResultSet res=ps_username.executeQuery();
-						if(res.next())
-						{
-							String sqlId="SELECT * FROM issueBooks WHERE bookId=?";
-							PreparedStatement ps_bookId=con.prepareStatement(sqlId);
-							ps_bookId.setString(1, bookId);
-							ResultSet res_id=ps_bookId.executeQuery();
-							if(res_id.next())
-							{
-								String query="UPDATE issueBooks SET dueDate='"+dueDate+"' , returnStatus='Submitted' WHERE bookId=?";
-								int flag=0;
-								try {
-									PreparedStatement ps=con.prepareStatement(query);
-//									ps.setString(1, dueDate);
-//									ps.setString(2, "submitted");
-									ps.setString(1, bookId);
-									
-									flag=ps.executeUpdate();
-								} catch (SQLException e1) {
-									e1.printStackTrace();
-								}
-								if(flag==0)
-								{
-									JOptionPane.showMessageDialog(getParent(), "Book cannot be returned, contact the librarian.","Error",JOptionPane.ERROR_MESSAGE);
-								}else
-								{
-									JOptionPane.showMessageDialog(getParent(), "Book Successfully Returned","Success",JOptionPane.INFORMATION_MESSAGE);
-									reset();
-								}
-							}
-							else
-							{
-								JOptionPane.showMessageDialog(getParent(), "There is no book with this "+bookId+" id.","Invalid Input",JOptionPane.ERROR_MESSAGE);
-							}
-						}else
-						{
-							JOptionPane.showMessageDialog(getParent(), "username is in correct","Invalid Input",JOptionPane.ERROR_MESSAGE);
-						}
-					} catch (SQLException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
-				}
-			}
-		});
-		btnIssue.setFont(new Font("Verdana", Font.PLAIN, 14));
-		
-		JButton btnCancel = new JButton("Cancel");
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
-			{
-				new FacultyPage().setVisible(true);
-				setVisible(false);
-			}
-		});
-		btnCancel.setFont(new Font("Verdana", Font.PLAIN, 14));
-		
-		textField_2 = new JTextField();
-		textField_2.setFont(new Font("Verdana", Font.PLAIN, 13));
-		textField_2.setColumns(10);
-		
-		JLabel lblNewLabel_3_2 = new JLabel("username");
-		lblNewLabel_3_2.setFont(new Font("Verdana", Font.PLAIN, 13));
-		
-		textField_3 = new JTextField();
-		textField_3.setEditable(false);
-		textField_3.setFont(new Font("Verdana", Font.PLAIN, 13));
-		textField_3.setColumns(10);
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(10)
-							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 404, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(10)
-							.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 404, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(10)
-							.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 404, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(10)
-							.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 404, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGap(45)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(lblNewLabel_3, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_3_2, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_3_1, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_3_1_1, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_3_1_1_1_1, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 95, GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblNewLabel_3_1_1_1, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 87, GroupLayout.PREFERRED_SIZE))
-									.addPreferredGap(ComponentPlacement.RELATED, 20, Short.MAX_VALUE))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addContainerGap()
-									.addComponent(btnIssue)
-									.addGap(28)))
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-											.addComponent(textField, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-											.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-											.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-											.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE))
-										.addGap(18))
-									.addGroup(gl_contentPane.createSequentialGroup()
-										.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, 83, GroupLayout.PREFERRED_SIZE)
-										.addGap(70)))
-								.addComponent(dateChooser, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE))))
-					.addGap(10))
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(11)
-					.addComponent(lblNewLabel)
-					.addGap(18)
-					.addComponent(lblNewLabel_1)
-					.addGap(18)
-					.addComponent(lblNewLabel_2)
-					.addGap(6)
-					.addComponent(lblNewLabel_2_1)
-					.addGap(34)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblNewLabel_3_2, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
-						.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel_3)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblNewLabel_3_1)
-						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblNewLabel_3_1_1)
-						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE))
-					.addGap(21)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_3_1_1_1))
-					.addGap(18)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel_3_1_1_1_1, Alignment.TRAILING)
-						.addComponent(dateChooser, Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addPreferredGap(ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(btnIssue)
-						.addComponent(btnCancel))
-					.addGap(30))
-		);
-		contentPane.setLayout(gl_contentPane);
-	}
+    public ReturnBook() {
+        setTitle("Trả Sách");
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setBounds(100, 100, 450, 550);
+        setLocationRelativeTo(this);
+        contentPane = new JPanel();
+        contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        setContentPane(contentPane);
+
+        JLabel lblTieuDe = new JLabel("TRẢ SÁCH");
+        lblTieuDe.setHorizontalAlignment(SwingConstants.CENTER);
+        lblTieuDe.setFont(new Font("Verdana", Font.BOLD, 18));
+
+        JLabel lblLoiCamOn = new JLabel("Cảm ơn bạn đã trả sách đúng hạn!");
+        lblLoiCamOn.setHorizontalAlignment(SwingConstants.CENTER);
+        lblLoiCamOn.setFont(new Font("Verdana", Font.ITALIC, 13));
+
+        JLabel lblMaSach = new JLabel("Mã sách:");
+        lblMaSach.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        JLabel lblTenSach = new JLabel("Tên sách:");
+        lblTenSach.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        JLabel lblTacGia = new JLabel("Tác giả:");
+        lblTacGia.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        JLabel lblTenNguoiDung = new JLabel("Tên người dùng:");
+        lblTenNguoiDung.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        JLabel lblNgayMuon = new JLabel("Ngày mượn:");
+        lblNgayMuon.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        JLabel lblNgayTra = new JLabel("Ngày trả:");
+        lblNgayTra.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        textField_MaSach = new JTextField();
+        textField_MaSach.setFont(new Font("Verdana", Font.PLAIN, 13));
+        textField_MaSach.setColumns(10);
+        textField_MaSach.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                String id = textField_MaSach.getText();
+                Connection con = DBInfo.conn();
+                String query = "SELECT * FROM issueBooks WHERE bookId=?";
+                int flag = 0;
+                try {
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ps.setString(1, id);
+                    ResultSet res = ps.executeQuery();
+                    while (res.next()) {
+                        flag = 1;
+                        String title = res.getString(3);
+                        String author = res.getString(4);
+                        String issueDate = res.getString(5);
+
+                        textField_TenSach.setText(title);
+                        comboBox_TacGia.setSelectedItem(author);
+                        textField_NgayMuon.setText(issueDate);
+                    }
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+                if (flag == 0) {
+                    JOptionPane.showMessageDialog(getParent(), "Mã sách không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    textField_TenSach.setEditable(false);
+                    comboBox_TacGia.setEnabled(false);
+                }
+            }
+        });
+
+        textField_TenSach = new JTextField();
+        textField_TenSach.setFont(new Font("Verdana", Font.PLAIN, 13));
+        textField_TenSach.setColumns(10);
+
+        comboBox_TacGia = new JComboBox(DBInfo.getValue("author"));
+        comboBox_TacGia.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        textField_TenNguoiDung = new JTextField();
+        textField_TenNguoiDung.setFont(new Font("Verdana", Font.PLAIN, 13));
+        textField_TenNguoiDung.setColumns(10);
+
+        textField_NgayMuon = new JTextField();
+        textField_NgayMuon.setEditable(false);
+        textField_NgayMuon.setFont(new Font("Verdana", Font.PLAIN, 13));
+        textField_NgayMuon.setColumns(10);
+
+        dateChooser_NgayTra = new JDateChooser();
+        dateChooser_NgayTra.setDateFormatString("dd-MM-yyyy");
+        dateChooser_NgayTra.setFont(new Font("Verdana", Font.PLAIN, 13));
+
+        JButton btnTraSach = new JButton("Xác nhận trả");
+        btnTraSach.setFont(new Font("Verdana", Font.PLAIN, 14));
+        btnTraSach.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SimpleDateFormat dFormat = new SimpleDateFormat("dd-MM-yyyy");
+                String username = textField_TenNguoiDung.getText();
+                String bookId = textField_MaSach.getText();
+                String title = textField_TenSach.getText();
+                String author = comboBox_TacGia.getSelectedItem().toString();
+                String issueDate = textField_NgayMuon.getText();
+                String dueDate = (dateChooser_NgayTra.getDate() == null) ? "" : dFormat.format(dateChooser_NgayTra.getDate());
+
+                if (username.isEmpty() || bookId.isEmpty() || title.isEmpty() || author.equalsIgnoreCase("Select")
+                        || issueDate.isEmpty() || dueDate.isEmpty()) {
+                    JOptionPane.showMessageDialog(getParent(), "Vui lòng điền đầy đủ thông tin!", "Thiếu dữ liệu",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+                    Connection con = DBInfo.conn();
+                    try {
+                        String sql = "SELECT * FROM issueBooks WHERE username=?";
+                        PreparedStatement ps_username = con.prepareStatement(sql);
+                        ps_username.setString(1, username);
+                        ResultSet res = ps_username.executeQuery();
+
+                        if (res.next()) {
+                            String sqlId = "SELECT * FROM issueBooks WHERE bookId=?";
+                            PreparedStatement ps_bookId = con.prepareStatement(sqlId);
+                            ps_bookId.setString(1, bookId);
+                            ResultSet res_id = ps_bookId.executeQuery();
+                            if (res_id.next()) {
+                                String query = "UPDATE issueBooks SET dueDate=?, returnStatus='Đã trả' WHERE bookId=?";
+                                PreparedStatement ps = con.prepareStatement(query);
+                                ps.setString(1, dueDate);
+                                ps.setString(2, bookId);
+                                int flag = ps.executeUpdate();
+
+                                if (flag > 0) {
+                                    JOptionPane.showMessageDialog(getParent(), "Trả sách thành công!",
+                                            "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                                    reset();
+                                } else {
+                                    JOptionPane.showMessageDialog(getParent(), "Không thể cập nhật dữ liệu!",
+                                            "Lỗi", JOptionPane.ERROR_MESSAGE);
+                                }
+                            } else {
+                                JOptionPane.showMessageDialog(getParent(),
+                                        "Không tìm thấy sách với mã " + bookId + ".", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(getParent(), "Tên người dùng không hợp lệ!", "Lỗi",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (SQLException e2) {
+                        e2.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        JButton btnHuy = new JButton("Hủy bỏ");
+        btnHuy.setFont(new Font("Verdana", Font.PLAIN, 14));
+        btnHuy.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                reset();
+            }
+        });
+
+        GroupLayout gl_contentPane = new GroupLayout(contentPane);
+        gl_contentPane.setHorizontalGroup(
+                gl_contentPane.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_contentPane.createSequentialGroup()
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(lblTieuDe, GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                                        .addComponent(lblLoiCamOn, GroupLayout.DEFAULT_SIZE, 424, Short.MAX_VALUE)
+                                        .addGroup(gl_contentPane.createSequentialGroup()
+                                                .addGap(50)
+                                                .addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+                                                        .addComponent(lblNgayTra)
+                                                        .addComponent(lblNgayMuon)
+                                                        .addComponent(lblTacGia)
+                                                        .addComponent(lblTenSach)
+                                                        .addComponent(lblMaSach)
+                                                        .addComponent(lblTenNguoiDung))
+                                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                                .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+                                                        .addComponent(textField_MaSach)
+                                                        .addComponent(textField_TenSach)
+                                                        .addComponent(comboBox_TacGia, 0, 220, Short.MAX_VALUE)
+                                                        .addComponent(textField_TenNguoiDung)
+                                                        .addComponent(textField_NgayMuon)
+                                                        .addComponent(dateChooser_NgayTra, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addGap(10))
+                        .addGroup(gl_contentPane.createSequentialGroup()
+                                .addGap(110)
+                                .addComponent(btnTraSach)
+                                .addGap(30)
+                                .addComponent(btnHuy)
+                                .addContainerGap(110, Short.MAX_VALUE))
+        );
+        gl_contentPane.setVerticalGroup(
+                gl_contentPane.createParallelGroup(Alignment.LEADING)
+                        .addGroup(gl_contentPane.createSequentialGroup()
+                                .addGap(10)
+                                .addComponent(lblTieuDe)
+                                .addPreferredGap(ComponentPlacement.UNRELATED)
+                                .addComponent(lblLoiCamOn)
+                                .addGap(30)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblTenNguoiDung)
+                                        .addComponent(textField_TenNguoiDung, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(15)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblMaSach)
+                                        .addComponent(textField_MaSach, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(15)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblTenSach)
+                                        .addComponent(textField_TenSach, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(15)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblTacGia)
+                                        .addComponent(comboBox_TacGia, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(15)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(lblNgayMuon)
+                                        .addComponent(textField_NgayMuon, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(15)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+                                        .addComponent(lblNgayTra)
+                                        .addComponent(dateChooser_NgayTra, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(25)
+                                .addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+                                        .addComponent(btnTraSach)
+                                        .addComponent(btnHuy))
+                                .addGap(30))
+        );
+        contentPane.setLayout(gl_contentPane);
+    }
 }
