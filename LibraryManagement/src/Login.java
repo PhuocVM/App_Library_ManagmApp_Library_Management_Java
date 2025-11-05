@@ -80,7 +80,11 @@ public class Login extends JFrame {
                 } else if (i == 1 && usertype.equalsIgnoreCase("Student")) {
                     new StudentPage().setVisible(true);
                     dispose();
-                } else {
+                } else if (i == 1 && usertype.equalsIgnoreCase("Faculty")) {
+                    new FacultyPage().setVisible(true);
+                    dispose();
+                }
+                else {
                     JOptionPane.showMessageDialog(getParent(), "Tên đăng nhập hoặc mật khẩu không đúng", "Đăng nhập thất bại", JOptionPane.ERROR_MESSAGE);
                 }
             }
