@@ -110,7 +110,7 @@ public class AddNewUser extends JFrame {
         JLabel lblLoaiTaiKhoan = new JLabel("Loại tài khoản:");
         lblLoaiTaiKhoan.setFont(new Font("Verdana", Font.PLAIN, 13));
 
-        String[] userTypes = {"Chọn loại tài khoản", "Quản trị viên", "Thủ thư", "Người dùng"};
+        String[] userTypes = {"Chọn loại tài khoản", "admin", "Faculty", "student"};
         cmbLoaiTaiKhoan = new JComboBox<>(userTypes);
         cmbLoaiTaiKhoan.setFont(new Font("Verdana", Font.PLAIN, 13));
 
@@ -125,8 +125,14 @@ public class AddNewUser extends JFrame {
                 String password = String.copyValueOf(txtMatKhau.getPassword());
                 String rePassword = String.copyValueOf(txtNhapLaiMatKhau.getPassword());
                 String userType = cmbLoaiTaiKhoan.getSelectedItem().toString();
+                if (!mobile.matches("\\d+")) {
+                    JOptionPane.showMessageDialog(getParent(),
+                            "Số điện thoại chỉ được chứa các chữ số (0-9)!",
+                            "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
 
-                if (name.isEmpty() || mobile.isEmpty() || email.isEmpty() || username.isEmpty()
+                if (name.isEmpty() || mobile.isEmpty() || username.isEmpty()
                         || password.isEmpty() || rePassword.isEmpty()
                         || userType.equalsIgnoreCase("Chọn loại tài khoản")) {
                     JOptionPane.showMessageDialog(getParent(),
